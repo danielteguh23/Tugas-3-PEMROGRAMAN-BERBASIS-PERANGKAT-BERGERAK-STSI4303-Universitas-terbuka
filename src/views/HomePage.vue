@@ -1,56 +1,141 @@
 <template>
-  <ion-page>
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-title>Blank</ion-title>
-      </ion-toolbar>
-    </ion-header>
+  <ion-content>
+    <div class="container">
 
-    <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Blank</ion-title>
-        </ion-toolbar>
-      </ion-header>
+      <button class="refresh-btn" @click='fetchData'>
+  <ion-spinner v-if="loading" name="crescent">  </ion-spinner>   
+    <span v-else>refresh</span>
+   </button>
 
-      <div id="container">
-        <strong>Ready to create an app?</strong>
-        <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-      </div>
-    </ion-content>
-  </ion-page>
-</template>
+<div v-if="loading" class="loading-text">
+loading...
+</div>
 
-<script setup lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+<div v-else>
+  <div
+  class="crypto-card"
+  v-for=" coin in coins"
+  :key="coin.id"
+  >
+<div class="left">
+  <p class="rank-title">Rank</p>
+  <p class="rank-number">{{ coin.rank }}</p>
+</div>
+
+<div class="middle">
+  <p class="name">{{ coin.name }}</p>
+  <p class="currency">USD</p>
+ <p class="price">{{ coin.price_usd }}</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+  </ion-content>
+  </template>
+
+  <script setup>
+import {ref, onMounted} from "vue";
+import { IonContent,IonSpinner } from "@ionic/vue";
+
+const coins = ref([]);
+const loading = ref(true);
+
+async function fetchData() {
+  loading.value = true;
+  const url = "https://api.coinlore.net/api/tickers/";
+
+  try {
+    const response = await fetch (url);
+    const data = await response.json();
+
+    coins.value = data.data.slice(0, 7);
+  } catch ( error) {
+    console.error("error fetching",error);
+
+  }
+  loading.value =false;
+
+}
+onMounted(() => {
+  fetchData();
+});
+
 </script>
 
-<style scoped>
-#container {
+<style>
+.container {
+  max-width: 420px;
+  margin: 20px auto;
+}
+
+.refresh-btn {
+  width: 100%;
+  padding: 12px;
+  background:#1c67ff;
+  border: none;
+  color: white;
+  border-radius: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.loading-text {
   text-align: center;
-  
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-#container strong {
   font-size: 20px;
-  line-height: 26px;
+  padding: 20px;
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-  
-  color: #8c8c8c;
-  
-  margin: 0;
+.crypto-card {
+  background: #fff3c8;
+  border: 1px solid #d9c999;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  margin-bottom: 12px;
 }
 
-#container a {
-  text-decoration: none;
+.left, .middle, .right{
+flex: 1;
+}
+
+.rank-title {
+  font-size: 12px;
+  color:#555;
+}
+
+.rank-number {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.name {
+  font-size: 14px;
+  color:#333;
+}
+
+.symbol {
+  font-size: 20px;
+  font-weight: bold;
+  color: #555;
+}
+
+.currency {
+  font-size: 12px;
+  text-align: right;
+  color:#555;
+}
+
+.price {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: right;
 }
 </style>
