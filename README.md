@@ -18,7 +18,8 @@ Aplikasi ini memanfaatkan **API Coinlore** untuk menampilkan data cryptocurrency
 
 ## Screenshot
 
-<img width="1919" height="1079" alt="Screenshot 2025-11-30 224432" src="https://github.com/user-attachments/assets/bd991c15-1e7f-4df5-a666-1c7e8b592e6b" />
+<img width="1890" height="936" alt="image" src="https://github.com/user-attachments/assets/f5f8348a-0dc8-44fd-9232-74980b5c6ad5" />
+
 
 
 ---
